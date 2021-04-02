@@ -1,0 +1,135 @@
+import random
+import time
+
+print('Welcome the Spring Hangman game \nWords to guess are spring-themed \n')
+
+def main():
+    global count
+    global word
+    global display
+    global lenght
+    global already_guessed
+    count = 0
+    to_guess = ['april', 'easter', 'holiday', 'spring', 'relaxing', 'colorful']
+    word = random.choice(to_guess)
+    lenght = len(word)
+    display = '_' * lenght
+    already_guessed = []
+
+def play():
+    global play_game
+    play_game = input('Do you want to play again? Y = yes, N = no \n', )
+
+    while play_game.lower() not in ['y', 'n']:
+      input('Do you want to play again? Y = yes, N = no \n', )
+
+    if play_game.lower() == 'n': 
+      print('Thanks for playing! Bye friend!')
+      exit()
+
+    elif play_game.lower() == 'y':
+      main()
+      hangman()
+    
+
+def hangman():
+    global count
+    global display
+    global word
+    global already_guessed
+    global play_game
+    limit = 5
+
+    guess = input("This is the Hangman Word: " + display + "\nEnter your guess: \n")
+    guess = guess.strip()
+    final = word
+
+    if len(guess.strip()) == 0 or len(guess.strip()) > 1 or guess <='9':
+      print('Invalid input, try a letter! \n')
+      hangman()
+
+    elif guess in word:
+      already_guessed.extend([guess])
+      number = word.count(guess)
+      
+      while number > 0:
+        index = word.find(guess)
+        word = word[:index] + '_' + word[index + 1:]
+        display = display[:index] + guess + display[index + 1:]
+        number -= 1
+
+      print(display + '\n')
+
+
+    elif guess in already_guessed:
+      print('Already guessed, try another letter!')
+
+    else: 
+      count += 1
+      if count == 1:
+        time.sleep(1)
+        print("    \n"
+               "  |      \n"
+               "  |      \n"
+               "  |      \n"
+               "  |      \n"
+               "  |      \n"
+               "  |      \n"
+               "__|__\n")
+        print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
+      elif count == 2:
+            time.sleep(1)
+            print("   _____ \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "__|__\n")
+            print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
+      elif count == 3:
+           time.sleep(1)
+           print("   _____ \n"
+                 "  |     | \n"
+                 "  |     |\n"
+                 "  |     | \n"
+                 "  |      \n"
+                 "  |      \n"
+                 "  |      \n"
+                 "__|__\n")
+           print("Wrong guess. " + str(limit - count) + " guesses remaining\n")
+      elif count == 4:
+            time.sleep(1)
+            print("   _____ \n"
+                  "  |     | \n"
+                  "  |     |\n"
+                  "  |     | \n"
+                  "  |     O \n"
+                  "  |      \n"
+                  "  |      \n"
+                  "__|__\n")
+            print("Wrong guess. " + str(limit - count) + " last guess remaining\n")
+      elif count == 5:
+            time.sleep(1)
+            print("   _____ \n"
+                  "  |     | \n"
+                  "  |     |\n"
+                  "  |     | \n"
+                  "  |     O \n"
+                  "  |    /|\ \n"
+                  "  |    / \ \n"
+                  "__|__\n")
+            print("Wrong guess. You are hanged!!!\n")
+            print("The word was: ",word)
+            play()
+
+    if word == '_' * lenght:
+        print("Congrats! You have guessed the word correctly!")
+        play()
+
+    elif count != limit:
+       hangman()
+
+main()
+hangman()
